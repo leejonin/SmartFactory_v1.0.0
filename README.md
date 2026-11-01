@@ -55,7 +55,7 @@ flowchart LR
 PowerShell에서 실행합니다. 다른 위치에 복제했다면 `Set-Location`을 실제 복제한 절대 경로로 바꿉니다.
 
 ```powershell
-Set-Location 'C:\Users\Slu93\Desktop\SmartFactory'
+Set-Location '(경로 수정 필요)\SmartFactory'
 npm ci
 npm run dev
 ```
@@ -71,7 +71,7 @@ npm run build
 npm run preview
 ```
 
-빌드 결과는 `C:\Users\Slu93\Desktop\SmartFactory\dist`에 생성됩니다. `preview`는 빌드 후 실행하는 로컬 확인용 서버입니다. 별도 호스팅 배포 설정은 포함하지 않습니다.
+빌드 결과는 `..\SmartFactory\dist`에 생성됩니다. `preview`는 빌드 후 실행하는 로컬 확인용 서버입니다. 별도 호스팅 배포 설정은 포함하지 않습니다.
 
 ## 화면 조작
 
@@ -91,18 +91,18 @@ npm run preview
 
 다음은 현재 로컬 위치이며 다른 위치에 복제하면 루트 부분만 달라집니다.
 
-- `C:\Users\Slu93\Desktop\SmartFactory\index.html`: 앱 진입 HTML.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`: 화면, 버튼 이벤트, 1/60초 고정 단계 실행과 통계 갱신.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\layout.js`: L1~L4 위치와 목적지 설정.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\factory.js`: 네 Simulation 생성, 실행·초기화·AGV 설정 전달, 전체 통계 취합.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js`: 상자 생성·합류·판독 상태·배차·이동 예약·도크 집계. AGV_SPEED, GAP, INLETS, DOCKS 정의.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\qr.js`: encodeRegion 이미지 생성, decodeRegion 판독·허용 목적지 검사.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\scene.js`: Three.js 장면·카메라·GLB 로드·상태 화면 반영. 장비 로드 실패 시 기본 형상 사용.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\style.css`: 화면 스타일.
-- `C:\Users\Slu93\Desktop\SmartFactory\tests`: 단일 라인 및 네 라인 자동 검사.
-- `C:\Users\Slu93\Desktop\SmartFactory\Asset`: 컨베이어 2종·AGV·탑차 GLB 원본 4개.
-- `C:\Users\Slu93\Desktop\SmartFactory\Info`: 기능 설명·개념·기술 환경·계획·작업 이력·문제 목록.
-- `C:\Users\Slu93\Desktop\SmartFactory\package.json`: 실행 명령과 의존성 버전. package-lock.json은 같은 폴더에 있는 설치 버전 잠금 파일입니다.
+- `..\SmartFactory\index.html`: 앱 진입 HTML.
+- `..\SmartFactory\src\main.js`: 화면, 버튼 이벤트, 1/60초 고정 단계 실행과 통계 갱신.
+- `..\SmartFactory\src\layout.js`: L1~L4 위치와 목적지 설정.
+- `..\SmartFactory\src\factory.js`: 네 Simulation 생성, 실행·초기화·AGV 설정 전달, 전체 통계 취합.
+- `..\SmartFactory\src\simulation.js`: 상자 생성·합류·판독 상태·배차·이동 예약·도크 집계. AGV_SPEED, GAP, INLETS, DOCKS 정의.
+- `..\SmartFactory\src\qr.js`: encodeRegion 이미지 생성, decodeRegion 판독·허용 목적지 검사.
+- `..\SmartFactory\src\scene.js`: Three.js 장면·카메라·GLB 로드·상태 화면 반영. 장비 로드 실패 시 기본 형상 사용.
+- `..\SmartFactory\src\style.css`: 화면 스타일.
+- `..\SmartFactory\tests`: 단일 라인 및 네 라인 자동 검사.
+- `..\SmartFactory\Asset`: 컨베이어 2종·AGV·탑차 GLB 원본 4개.
+- `..\SmartFactory\Info`: 기능 설명·개념·기술 환경·계획·작업 이력·문제 목록.
+- `..\SmartFactory\package.json`: 실행 명령과 의존성 버전. package-lock.json은 같은 폴더에 있는 설치 버전 잠금 파일입니다.
 
 호출 흐름은 main.js → FactorySimulation.step(dt) → 각 Simulation.step(dt) → 장면 sync·render입니다. 다음은 main.js의 실제 프레임 루프 발췌입니다.
 
@@ -130,8 +130,8 @@ Git 반영 준비 대상은 소스·테스트·HTML·패키지 설정과 잠금 
 
 실제 설비 연결, 충돌 물리 엔진, 실측 처리량 보장, 영구 저장은 현재 범위에 없습니다. AGV 대수에 비례하는 처리량 증가도 보장하지 않습니다.
 
-상세 문서: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+상세 문서: `..\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
 
-문제 현황: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\problem\문제_목록.md`
+문제 현황: `..\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\problem\문제_목록.md`
 
 이번 변경은 누적 설명 형태의 README를 현재 4라인 구현·설치·구조·검증 범위 중심으로 정리한 것입니다. 앱 코드·패키지 버전·기존 작업 이력은 변경하지 않았습니다.
