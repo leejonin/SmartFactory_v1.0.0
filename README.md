@@ -3,11 +3,10 @@
 한 공장 안의 네 물류 라인에서 상자가 컨베이어를 지나 QR 판독을 받고, AGV(자동 운반 차량)에 실려 목적지 도크까지 이동하는 과정을 보여주는 한국어 3D 웹앱입니다. 브라우저에서 물류 흐름을 관찰하는 시뮬레이션이며 실제 설비를 제어하지 않습니다.
 
 - 앱 버전: **v0.0.10** — package.json과 화면 기준. 저장소 이름 `SmartFactory_v1.0.0`과 구분합니다.
-- README 문서 버전: v0.0.11
+- README 문서 버전: v0.0.12
 - 최초 생성: 2026-11-02 (KST) / 수정: 2026-11-02 (KST)
 - 기능 ID: `SW_Browser_Logistics_001` / 관련 기능 ID: 없음
 - 지시자: 이종인 / 작업자: GPT-6 (Codex) — 문서 정리와 Git 반영 준비
-- 확인한 프로젝트 루트: `C:\Users\Slu93\Desktop\SmartFactory`
 
 ```mermaid
 flowchart LR
@@ -52,10 +51,11 @@ flowchart LR
 
 ## 설치와 실행
 
-PowerShell에서 실행합니다. 다른 위치에 복제했다면 `Set-Location`을 실제 복제한 절대 경로로 바꿉니다.
+Git과 위 요구 조건에 맞는 Node.js를 설치한 뒤, 원하는 작업 폴더의 터미널에서 실행합니다.
 
 ```powershell
-Set-Location 'C:\Users\Slu93\Desktop\SmartFactory'
+git clone https://github.com/leejonin/SmartFactory_v1.0.0.git
+cd SmartFactory_v1.0.0
 npm ci
 npm run dev
 ```
@@ -71,7 +71,7 @@ npm run build
 npm run preview
 ```
 
-빌드 결과는 `C:\Users\Slu93\Desktop\SmartFactory\dist`에 생성됩니다. `preview`는 빌드 후 실행하는 로컬 확인용 서버입니다. 별도 호스팅 배포 설정은 포함하지 않습니다.
+빌드 결과는 저장소 안의 `dist/`에 생성됩니다. `preview`는 빌드 후 실행하는 로컬 확인용 서버입니다. 별도 호스팅 배포 설정은 포함하지 않습니다.
 
 ## 화면 조작
 
@@ -89,20 +89,20 @@ npm run preview
 
 ## 소스 구조와 설정
 
-다음은 현재 로컬 위치이며 다른 위치에 복제하면 루트 부분만 달라집니다.
+아래 경로는 복제한 저장소의 최상위 폴더를 기준으로 합니다.
 
-- `C:\Users\Slu93\Desktop\SmartFactory\index.html`: 앱 진입 HTML.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`: 화면, 버튼 이벤트, 1/60초 고정 단계 실행과 통계 갱신.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\layout.js`: L1~L4 위치와 목적지 설정.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\factory.js`: 네 Simulation 생성, 실행·초기화·AGV 설정 전달, 전체 통계 취합.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js`: 상자 생성·합류·판독 상태·배차·이동 예약·도크 집계. AGV_SPEED, GAP, INLETS, DOCKS 정의.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\qr.js`: encodeRegion 이미지 생성, decodeRegion 판독·허용 목적지 검사.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\scene.js`: Three.js 장면·카메라·GLB 로드·상태 화면 반영. 장비 로드 실패 시 기본 형상 사용.
-- `C:\Users\Slu93\Desktop\SmartFactory\src\style.css`: 화면 스타일.
-- `C:\Users\Slu93\Desktop\SmartFactory\tests`: 단일 라인 및 네 라인 자동 검사.
-- `C:\Users\Slu93\Desktop\SmartFactory\Asset`: 컨베이어 2종·AGV·탑차 GLB 원본 4개.
-- `C:\Users\Slu93\Desktop\SmartFactory\Info`: 기능 설명·개념·기술 환경·계획·작업 이력·문제 목록.
-- `C:\Users\Slu93\Desktop\SmartFactory\package.json`: 실행 명령과 의존성 버전. package-lock.json은 같은 폴더에 있는 설치 버전 잠금 파일입니다.
+- `index.html`: 앱 진입 HTML.
+- `src/main.js`: 화면, 버튼 이벤트, 1/60초 고정 단계 실행과 통계 갱신.
+- `src/layout.js`: L1~L4 위치와 목적지 설정.
+- `src/factory.js`: 네 Simulation 생성, 실행·초기화·AGV 설정 전달, 전체 통계 취합.
+- `src/simulation.js`: 상자 생성·합류·판독 상태·배차·이동 예약·도크 집계. AGV_SPEED, GAP, INLETS, DOCKS 정의.
+- `src/qr.js`: encodeRegion 이미지 생성, decodeRegion 판독·허용 목적지 검사.
+- `src/scene.js`: Three.js 장면·카메라·GLB 로드·상태 화면 반영. 장비 로드 실패 시 기본 형상 사용.
+- `src/style.css`: 화면 스타일.
+- `tests`: 단일 라인 및 네 라인 자동 검사.
+- `Asset`: 컨베이어 2종·AGV·탑차 GLB 원본 4개.
+- `Info`: 기능 설명·개념·기술 환경·계획·작업 이력·문제 목록.
+- `package.json`: 실행 명령과 의존성 버전. package-lock.json은 같은 폴더에 있는 설치 버전 잠금 파일입니다.
 
 호출 흐름은 main.js → FactorySimulation.step(dt) → 각 Simulation.step(dt) → 장면 sync·render입니다. 다음은 main.js의 실제 프레임 루프 발췌입니다.
 
@@ -116,7 +116,7 @@ if(!paused&&!document.hidden){accumulator+=dt*speed;while(accumulator>=1/60){sim
 
 GLB 4개의 내부 asset.copyright에서 **Innerscene Corp / CC0 1.0 Universal** 표시를 확인했습니다. 장면 생성 시 AGV 선반·보관 상자 및 컨베이어의 정적 상자 일부를 제외하지만 원본 파일은 보존합니다. 이 표시는 앱 소스 전체의 라이선스를 뜻하지 않으며 별도의 소스 LICENSE 파일은 없습니다.
 
-Git 반영 준비 대상은 소스·테스트·HTML·패키지 설정과 잠금 파일·GLB 원본·README·Info 문서와 기존 검증 이미지입니다. 기존 .gitignore에 따라 node_modules, dist, .vite는 제외합니다. 의존성과 빌드는 실행 명령으로 다시 만들 수 있습니다. GLB 원본 합계는 약 32MB입니다.
+Git에 포함하는 파일은 소스·테스트·HTML·패키지 설정과 잠금 파일·GLB 원본·README·Info 문서와 기존 검증 이미지입니다. 기존 .gitignore에 따라 node_modules, dist, .vite는 제외합니다. 의존성과 빌드는 실행 명령으로 다시 만들 수 있습니다. GLB 원본 합계는 약 32MB입니다.
 
 ## 검증과 제한
 
@@ -130,8 +130,8 @@ Git 반영 준비 대상은 소스·테스트·HTML·패키지 설정과 잠금 
 
 실제 설비 연결, 충돌 물리 엔진, 실측 처리량 보장, 영구 저장은 현재 범위에 없습니다. AGV 대수에 비례하는 처리량 증가도 보장하지 않습니다.
 
-상세 문서: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+상세 문서: [물류시뮬레이션.md](Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/물류시뮬레이션.md)
 
-문제 현황: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\problem\문제_목록.md`
+문제 현황: [문제_목록.md](Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/problem/문제_목록.md)
 
 이번 변경은 누적 설명 형태의 README를 현재 4라인 구현·설치·구조·검증 범위 중심으로 정리한 것입니다. 앱 코드·패키지 버전·기존 작업 이력은 변경하지 않았습니다.
