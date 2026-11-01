@@ -7,7 +7,7 @@
 - 최초 생성: 2026-11-02 (KST) / 수정: 2026-11-02 (KST)
 - 기능 ID: `SW_Browser_Logistics_001` / 관련 기능 ID: 없음
 - 지시자: 이종인 / 작업자: GPT-6 (Codex) — 문서 정리와 Git 반영 준비
-- 확인한 프로젝트 루트: `C:\Users\Slu93\Desktop\SmartFactory`
+- 확인한 프로젝트 루트: `..\Desktop\SmartFactory`
 
 ```mermaid
 flowchart LR
