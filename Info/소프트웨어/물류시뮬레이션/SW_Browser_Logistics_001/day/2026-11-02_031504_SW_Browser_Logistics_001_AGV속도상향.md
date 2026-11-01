@@ -1,0 +1,42 @@
+# AGV 이동 속도 소폭 상향
+
+- 버전: v0.0.6
+- 문서 초기 생성 일시: 2026-11-02 03:15:04 (KST)
+- 문서 수정 일시: 2026-11-02 03:16 (KST)
+- 지시자: 이종인
+- 작업자: GPT-6 (Codex)
+- 기능 ID: SW_Browser_Logistics_001
+- 관련 기능 ID: 없음
+- 기술 환경: C:\Users\Slu93\Desktop\SmartFactory\Info\기술_환경.md
+
+## 개요·용어·변경 전후
+
+AGV 이동 속도를 조금 높여 달라는 요청에 따라 1.0m/s에서 1.2m/s로 20% 상향했다. m/s는 시뮬레이션의 초당 이동 거리다. 컨베이어 속도·상하차 시간·병렬 구간 예약·선대기·직행 복귀는 기존 규칙을 사용한다.
+
+## 실제 코드와 동작
+
+출처: C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js
+
+```javascript
+export const AGV_SPEED = 1.2; // m/s: 구간 예약을 유지한 채 이동 속도만 20% 상향.
+```
+
+stepAgv에서 예약을 확보한 장비의 이동 거리로 속도×dt를 전달한다.
+
+```javascript
+if(advance(a,a.route[0],AGV_SPEED*dt)){a.route.shift();a.segment=null;}
+```
+
+C:\Users\Slu93\Desktop\SmartFactory\src\main.js는 같은 상수를 import하여 운영 설정의 속도 표시에도 사용한다. package.json과 package-lock.json의 버전은0.0.6이다.
+
+## 확인 결과
+
+npm test 10개 통과. 1·2·3대 반복 운행, 수량 보존, 상자·AGV 충돌, 추가5개 난수 시나리오 교착, QR·선대기·직행 복귀를 재검증했다. 3대·모의30분·시드341 조건에서 95개 인도(33/34/28), 111개 생성, 16개 잔여를 확인했다. 직전1m/s 동일 테스트는80개 인도였다. 실제 공장 성능을 의미하지 않는다.
+
+npm run build 통과. 기존 큰 청크 경고는 유지된다. 이번 수정의 브라우저 시각 확인은 수행하지 않았다.
+
+## 문제·Git
+
+이번 속도 변경에서 추가로 확인한 미해결 문제 없음. 기존 미확인·경고는 같은 기능의 problem/문제_목록.md에서 유지한다. 실행 화면 확인 제한은 SW_Browser_Logistics_Unverified_004에 연결한다.
+
+당일 day3개, 문서 변경24시간 미만으로 자동 반영 조건 미충족. 프로젝트 Git 저장소·원격이 없어 커밋·push는 수행하지 않았다.

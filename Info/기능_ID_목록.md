@@ -1,0 +1,16 @@
+# 기능 ID 목록
+
+- 문서 초기 생성·수정 일시: 2026-11-02 (KST)
+- 지시자: 이종인
+- 작업자: GPT-6 (Codex)
+- 버전: v0.0.1
+
+기존 목록·구현이 없는 상태를 확인한 뒤 브라우저에서 실행되는 물류 시뮬레이션에 대표 ID 하나를 부여했습니다. 클래스나 파일마다 중복 ID를 부여하지 않습니다.
+
+| 기능 ID | 영역 / 실행환경 / 영문중분류 | 중분류명 대응 | 기능·책임 | 관련 ID | 상태 |
+|---|---|---|---|---|---|
+| SW_Browser_Logistics_001 | SW / Browser / Logistics | 물류시뮬레이션 / Logistics | 한 공장 4라인·16유입구·4QR·다중 AGV·12도크·3D 관찰 통합 | 없음 | 구현 완료, 외형 사용자 검토 남음 |
+
+- 코드: `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`, `simulation.js`, `qr.js`, `scene.js` (모두 동일 src 폴더).
+- 문서: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+- 이전 ID: 해당 없음.

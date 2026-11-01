@@ -1,1 +1,137 @@
-# SmartFactory_v1.0.0
+# SmartFactory — FLOW 공장 물류 시뮬레이션
+
+한 공장 안의 네 물류 라인에서 상자가 컨베이어를 지나 QR 판독을 받고, AGV(자동 운반 차량)에 실려 목적지 도크까지 이동하는 과정을 보여주는 한국어 3D 웹앱입니다. 브라우저에서 물류 흐름을 관찰하는 시뮬레이션이며 실제 설비를 제어하지 않습니다.
+
+- 앱 버전: **v0.0.10** — package.json과 화면 기준. 저장소 이름 `SmartFactory_v1.0.0`과 구분합니다.
+- README 문서 버전: v0.0.11
+- 최초 생성: 2026-11-02 (KST) / 수정: 2026-11-02 (KST)
+- 기능 ID: `SW_Browser_Logistics_001` / 관련 기능 ID: 없음
+- 지시자: 이종인 / 작업자: GPT-6 (Codex) — 문서 정리와 Git 반영 준비
+- 확인한 프로젝트 루트: `C:\Users\Slu93\Desktop\SmartFactory`
+
+```mermaid
+flowchart LR
+    A[라인별 유입구 4개] --> B[컨베이어 합류]
+    B --> C[QR 이미지 판독]
+    C -->|목적지 일치| D[AGV 인수 · 운반]
+    C -->|판독 실패| E[인계 중지 · 재시도]
+    E --> C
+    D --> F[라인별 도크 3개 · 출하 집계]
+    F --> G[빈 AGV 복귀 · 다음 운반]
+```
+
+위 흐름을 L1~L4에서 각각 실행합니다. **총 유입구 16개, QR 판독 지점 4개, 도크 12개, 탑차 모델 12개**입니다. 레이어는 층수가 아니라 같은 바닥에 배치한 독립 물류 라인을 뜻합니다.
+
+## 주요 기능
+
+- 네 라인을 X=0, Z=0·29·58·87에 한 열로 배치하며 각 라인은 자체 상자·장비·출하 상태를 갖습니다.
+- 레이어당 AGV 1~3대를 동일 적용합니다. 기본값은 라인당 3대, 전체 12대입니다. 대수 변경 시 전체 운반·통계를 초기화합니다.
+- 라인별 3초마다 상자 생성을 시도합니다. 선택한 유입구가 막히면 해당 상자의 생성을 기다립니다.
+- 컨베이어 0.5m/s, AGV 1.2m/s로 이동합니다. 1 unit=1m이며 실측 사양이 아닌 임시 운영값입니다.
+- 합류 순서·상자 간격을 관리합니다. AGV는 이동 구간을 예약하고 겹치지 않는 구간에서 동시에 이동합니다. QR 판독 전 선배차, 옆 대기, 빈 장비의 QR 직행 복귀를 지원합니다.
+- 운반 완료 수, 이송 중 상자, 목적지별 출하, 경과 시간, 전체 AGV 상태, 최근 판독 결과와 작업 기록을 표시합니다.
+
+목적지는 다음과 같습니다.
+
+- L1: 목동 · 합정동 · 면목동
+- L2: 역삼동 · 잠실동 · 천호동
+- L3: 화곡동 · 구로동 · 독산동
+- L4: 상계동 · 창동 · 길음동
+
+## 기술 환경
+
+2026-11-02 KST에 로컬 버전 출력과 잠금 파일로 확인했습니다.
+
+- Node.js **v24.18.0**, npm **11.16.0**
+- JavaScript ES modules: 별도 언어 버전 고정 없음
+- Vite **8.3.5**: 설치 패키지의 Node.js 요구 조건은 `^20.19.0 || >=22.12.0`
+- Three.js **0.187.0**, qrcode **1.5.4**, jsqr **1.4.0**
+- WebGL을 사용할 수 있는 브라우저와 그래픽 환경 필요
+
+별도 API 키, 환경 변수, 백엔드, 데이터베이스 설정은 없습니다. 시뮬레이션 상태는 브라우저 메모리에 있으며 새로고침하면 초기화됩니다.
+
+## 설치와 실행
+
+PowerShell에서 실행합니다. 다른 위치에 복제했다면 `Set-Location`을 실제 복제한 절대 경로로 바꿉니다.
+
+```powershell
+Set-Location 'C:\Users\Slu93\Desktop\SmartFactory'
+npm ci
+npm run dev
+```
+
+`npm ci`는 잠금 파일에 기록된 의존성을 설치합니다. 패키지를 내려받을 때 네트워크가 필요합니다. 터미널에 표시되는 Local 주소를 브라우저에서 엽니다. 개발 서버는 `127.0.0.1`에 연결되며 실제 포트는 터미널 출력을 따릅니다. HTML 파일을 직접 더블클릭하는 대신 Vite 서버를 사용합니다.
+
+```powershell
+# 자동 테스트
+npm test
+# 정적 배포 파일 생성
+npm run build
+# 빌드 결과 로컬 확인
+npm run preview
+```
+
+빌드 결과는 `C:\Users\Slu93\Desktop\SmartFactory\dist`에 생성됩니다. `preview`는 빌드 후 실행하는 로컬 확인용 서버입니다. 별도 호스팅 배포 설정은 포함하지 않습니다.
+
+## 화면 조작
+
+1. 드래그로 회전하고 휠로 확대·축소합니다. 오른쪽 드래그로 화면을 이동합니다.
+2. 탑뷰는 공장 전체를 위에서 봅니다. QR 뷰와 AGV 뷰는 L1 주변의 고정 시점이며 개별 장비 추적 기능은 아닙니다.
+3. 일시정지/재생, 초기화, 1·2·5배속을 선택합니다.
+4. 레이어당 AGV 대수 변경은 네 라인에 동시에 적용되고 운반·통계를 초기화합니다.
+5. QR 판독 실패 상자가 있으면 `QR 다시 읽기` 버튼이 표시됩니다.
+
+## QR 판독과 운반 방식
+
+`qrcode`가 목적지를 담은 JSON을 QR 픽셀 이미지로 만들고 `jsQR`이 그 RGBA 이미지를 읽습니다. 판독 목적지가 해당 라인의 허용 목록에 있고 상자 목적지와 일치해야 인계합니다. 실패하면 상자를 멈추며 원래 목적지 값으로 우회하지 않습니다. 카메라 영상이나 원근이 있는 3D 화면을 판독하는 방식은 아닙니다.
+
+상자는 컨베이어 이동 → QR 판독 → AGV 대기 → 인수 → 도크 운반 → 인도 순서로 처리합니다. 인수와 인도는 각각 2초입니다. 도크 인도 후 출하 수를 올리고 상자를 장면에서 제거합니다. 트럭 내부 적재나 트럭 출발은 구현하지 않았습니다.
+
+## 소스 구조와 설정
+
+다음은 현재 로컬 위치이며 다른 위치에 복제하면 루트 부분만 달라집니다.
+
+- `C:\Users\Slu93\Desktop\SmartFactory\index.html`: 앱 진입 HTML.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`: 화면, 버튼 이벤트, 1/60초 고정 단계 실행과 통계 갱신.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\layout.js`: L1~L4 위치와 목적지 설정.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\factory.js`: 네 Simulation 생성, 실행·초기화·AGV 설정 전달, 전체 통계 취합.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js`: 상자 생성·합류·판독 상태·배차·이동 예약·도크 집계. AGV_SPEED, GAP, INLETS, DOCKS 정의.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\qr.js`: encodeRegion 이미지 생성, decodeRegion 판독·허용 목적지 검사.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\scene.js`: Three.js 장면·카메라·GLB 로드·상태 화면 반영. 장비 로드 실패 시 기본 형상 사용.
+- `C:\Users\Slu93\Desktop\SmartFactory\src\style.css`: 화면 스타일.
+- `C:\Users\Slu93\Desktop\SmartFactory\tests`: 단일 라인 및 네 라인 자동 검사.
+- `C:\Users\Slu93\Desktop\SmartFactory\Asset`: 컨베이어 2종·AGV·탑차 GLB 원본 4개.
+- `C:\Users\Slu93\Desktop\SmartFactory\Info`: 기능 설명·개념·기술 환경·계획·작업 이력·문제 목록.
+- `C:\Users\Slu93\Desktop\SmartFactory\package.json`: 실행 명령과 의존성 버전. package-lock.json은 같은 폴더에 있는 설치 버전 잠금 파일입니다.
+
+호출 흐름은 main.js → FactorySimulation.step(dt) → 각 Simulation.step(dt) → 장면 sync·render입니다. 다음은 main.js의 실제 프레임 루프 발췌입니다.
+
+```javascript
+if(!paused&&!document.hidden){accumulator+=dt*speed;while(accumulator>=1/60){sim.step(1/60);accumulator-=1/60;}}
+```
+
+누적 시간을 작은 단위로 나누어 렌더 횟수와 시뮬레이션 단계를 구분합니다. 비활성 탭 복귀 시 누적 시간을 비워 갑작스러운 이동을 막습니다. 라인 수·도크 수·AGV 최대 대수에는 고정된 화면·로직 전제가 있으므로 설정 하나만으로 임의 규모 확장을 보장하지 않습니다.
+
+## 에셋과 Git 포함 범위
+
+GLB 4개의 내부 asset.copyright에서 **Innerscene Corp / CC0 1.0 Universal** 표시를 확인했습니다. 장면 생성 시 AGV 선반·보관 상자 및 컨베이어의 정적 상자 일부를 제외하지만 원본 파일은 보존합니다. 이 표시는 앱 소스 전체의 라이선스를 뜻하지 않으며 별도의 소스 LICENSE 파일은 없습니다.
+
+Git 반영 준비 대상은 소스·테스트·HTML·패키지 설정과 잠금 파일·GLB 원본·README·Info 문서와 기존 검증 이미지입니다. 기존 .gitignore에 따라 node_modules, dist, .vite는 제외합니다. 의존성과 빌드는 실행 명령으로 다시 만들 수 있습니다. GLB 원본 합계는 약 32MB입니다.
+
+## 검증과 제한
+
+2026-11-02 KST, 기존 설치 의존성으로 다시 실행했습니다.
+
+- **npm test: 13개 통과, 실패 0개.** 실제 QR 픽셀 판독, 실패·잘못된 목적지 처리, 초기화, 1~3대 AGV 반복 운행, 여러 난수 시나리오, 네 라인 독립성과 물량 보존을 검사했습니다.
+- 네 라인 10분 고정 시드 도크별 인도: `[5,13,14,9,15,9,14,8,8,7,9,15]`. 충돌 검사는 테스트의 좌표·간격·표본 시점 기준이며 물리 엔진이나 현장 안전 검증이 아닙니다.
+- **npm run build: 통과.** JavaScript 819.55kB, gzip 224.43kB. 500kB 초과 청크 경고는 남아 있습니다(`SW_Browser_Logistics_Unresolved_001`).
+- 이번 문서 작업에서 브라우저 화면 재실행과 깨끗한 환경의 npm ci는 미확인입니다(`SW_Browser_Logistics_Unverified_005`). 기존 v0.0.10 화면 검증 이력은 보존했습니다.
+- 실제 외형 적합성(`SW_Browser_Logistics_Unverified_001`), 원스케치 비교(`SW_Browser_Logistics_Unverified_002`), 저사양 GPU·여러 브라우저·터치 환경(`SW_Browser_Logistics_Unverified_003`)은 미확인입니다.
+
+실제 설비 연결, 충돌 물리 엔진, 실측 처리량 보장, 영구 저장은 현재 범위에 없습니다. AGV 대수에 비례하는 처리량 증가도 보장하지 않습니다.
+
+상세 문서: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+
+문제 현황: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\problem\문제_목록.md`
+
+이번 변경은 누적 설명 형태의 README를 현재 4라인 구현·설치·구조·검증 범위 중심으로 정리한 것입니다. 앱 코드·패키지 버전·기존 작업 이력은 변경하지 않았습니다.
