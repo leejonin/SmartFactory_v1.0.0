@@ -11,6 +11,6 @@
 |---|---|---|---|---|---|
 | SW_Browser_Logistics_001 | SW / Browser / Logistics | 물류시뮬레이션 / Logistics | 한 공장 4라인·16유입구·4QR·다중 AGV·12도크·3D 관찰 통합 | 없음 | 구현 완료, 외형 사용자 검토 남음 |
 
-- 코드: `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`, `simulation.js`, `qr.js`, `scene.js` (모두 동일 src 폴더).
-- 문서: `C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+- 코드: `./src/main.js`, `simulation.js`, `qr.js`, `scene.js` (모두 동일 src 폴더).
+- 문서: `./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/물류시뮬레이션.md`
 - 이전 ID: 해당 없음.

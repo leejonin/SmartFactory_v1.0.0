@@ -36,4 +36,4 @@ Node.js v24.18.0 / npm 11.16.0 / Vite 8.3.5 / Three.js 0.187.0. Actions의 Node�
 - https://vite.dev/guide/static-deploy.html#github-pages
 - https://docs.github.com/en/rest/pages/pages#create-a-github-pages-site
 
-관련 코드: C:\Users\Slu93\Desktop\SmartFactory\vite.config.js 및 C:\Users\Slu93\Desktop\SmartFactory\.github\workflows\pages.yml.
+관련 코드: ./vite.config.js 및 ./.github/workflows/pages.yml.

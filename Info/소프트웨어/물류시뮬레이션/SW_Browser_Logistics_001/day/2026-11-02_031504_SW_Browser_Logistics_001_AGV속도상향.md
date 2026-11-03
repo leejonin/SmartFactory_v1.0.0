@@ -7,7 +7,7 @@
 - 작업자: GPT-6 (Codex)
 - 기능 ID: SW_Browser_Logistics_001
 - 관련 기능 ID: 없음
-- 기술 환경: C:\Users\Slu93\Desktop\SmartFactory\Info\기술_환경.md
+- 기술 환경: ./Info/기술_환경.md
 
 ## 개요·용어·변경 전후
 
@@ -15,7 +15,7 @@ AGV 이동 속도를 조금 높여 달라는 요청에 따라 1.0m/s에서 1.2m/
 
 ## 실제 코드와 동작
 
-출처: C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js
+출처: ./src/simulation.js
 
 ```javascript
 export const AGV_SPEED = 1.2; // m/s: 구간 예약을 유지한 채 이동 속도만 20% 상향.
@@ -27,7 +27,7 @@ stepAgv에서 예약을 확보한 장비의 이동 거리로 속도×dt를 전�
 if(advance(a,a.route[0],AGV_SPEED*dt)){a.route.shift();a.segment=null;}
 ```
 
-C:\Users\Slu93\Desktop\SmartFactory\src\main.js는 같은 상수를 import하여 운영 설정의 속도 표시에도 사용한다. package.json과 package-lock.json의 버전은0.0.6이다.
+./src/main.js는 같은 상수를 import하여 운영 설정의 속도 표시에도 사용한다. package.json과 package-lock.json의 버전은0.0.6이다.
 
 ## 확인 결과
 

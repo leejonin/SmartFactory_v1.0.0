@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { INLETS, DOCKS } from './simulation.js';
+import { INLETS, DOCKS, MAX_AGVS, agvHome } from './simulation.js';
 import { LAYERS } from './layout.js';
 import rollerUrl from '../Asset/straight-roller-conveyor.glb?url';
 import beltUrl from '../Asset/belt-conveyor-straight.glb?url';
@@ -54,24 +54,24 @@ export function createScene(container,qrImages,onAssetStatus) {
   const scene=new THREE.Scene();scene.background=new THREE.Color('#cbd4d3');scene.fog=new THREE.Fog('#cbd4d3',400,750);
   const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
-  renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','4개 레이어의 16개 유입구, QR 4개, AGV, 출하 도크와 탑차 각 12대를 보여주는 3D 공장');container.prepend(renderer.domElement);
+  renderer.domElement.className='scene';renderer.domElement.setAttribute('aria-label','4개 공정의 16개 유입구, QR 4개, AGV, 출하 도크와 탑차 각 12대를 보여주는 3D 공장');container.prepend(renderer.domElement);
   const camera=new THREE.PerspectiveCamera(42,1,0.1,800);camera.position.set(28,31,34);
   const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,0,-1);controls.enableDamping=true;controls.maxPolarAngle=Math.PI/2.08;controls.minDistance=4;controls.maxDistance=400;controls.update();
   scene.add(new THREE.HemisphereLight('#f4faff','#657781',2.7));
   const sun=new THREE.DirectionalLight('#fff4df',3.2);sun.position.set(-12,100,42);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-100,right:120,top:160,bottom:-160,near:1,far:300});sun.shadow.normalBias=0.04;scene.add(sun);
-  const world=scene, loader=new GLTFLoader(),assetCache=new Map();let loaded=0,truckBatch;
+  const world=scene, loader=new GLTFLoader(),assetCache=new Map();let loaded=0,truckBatch,visibleCount=1;
   // 네 물류 라인이 공유하는 하나의 공장 바닥과 외벽. 내부 구역별 바닥·벽은 만들지 않는다.
-  block(world,62,0.2,120,6,-0.15,44,'#9aa8a7');
+  const floor=block(world,62,0.2,120,6,-0.15,44,'#9aa8a7');
   const grid=new THREE.GridHelper(120,120,'#8a9b9b','#adb9b6');grid.scale.x=62/120;grid.position.set(6,-0.035,44);world.add(grid);
   block(world,62,4.4,0.3,6,2.1,-16,'#b6c2c0');
   for(let x=-24;x<=36;x+=8){block(world,0.24,5.5,0.3,x,2.7,-15.7,'#65777b');block(world,0.45,0.15,0.55,x,5.3,-15.5,'#d8e4dc');}
   label(world,'FLOW / SMART FACTORY',6,3.3,-15.79,22);
-  /** 동일 기본 장면을 레이어 원점에 배치하고 독립 상태 동기화 함수를 만든다. */
+  /** 동일 기본 장면을 공정 원점에 배치하고 독립 상태 동기화 함수를 만든다. */
   function buildLayer(definition,qrImages){
     const scene=new THREE.Group();scene.name=definition.id;scene.userData.layerId=definition.id;
     scene.position.set(definition.x,0,definition.z);world.add(scene);
     const regions=definition.regions;
-  label(scene,definition.id + ' / LOGISTICS LINE',-5,0.025,-12,9,'#486367',true);
+  label(scene,'공정 ' + definition.id.slice(1) + ' / PROCESS',-5,0.025,-12,9,'#486367',true);
   for(let x=-18;x<22;x+=2) block(scene,1.1,0.015,0.07,x,0.006,3.1,'#d8b15d');
   for(let z=-11;z<=12;z+=1.7){block(scene,0.08,0.015,0.85,14.5,0.01,z,'#d8b15d');block(scene,0.08,0.015,0.85,20.5,0.01,z,'#8ac0bb');}
   label(scene,'OUTBOUND',16,0.025,-10,3,'#6f633d',true);
@@ -107,13 +107,16 @@ export function createScene(container,qrImages,onAssetStatus) {
   const fallbackAgv=block(agv,1.65,0.55,1.35,0,0.38,0,'#d2a34c');
   block(agv,1.6,0.12,1.25,0,0.94,0,'#8c9b9a');
   for(const z of [-0.66,0.66])block(agv,1.3,0.18,0.06,0,0.83,z,'#b8c6c5');
-  for(let i=0;i<3;i++){
-    const z=4+i*2.6;block(scene,2.2,0.018,1.9,7,0.006,z,'#829a98');
-    label(scene,`AGV 0${i+1}`,7,0.035,z+1.15,2,'#425f61',true);
+  for(let i=0;i<MAX_AGVS;i++){
+    const {x,z}=agvHome(i);block(scene,2.2,0.018,1.9,x,0.006,z,'#829a98');
+    label(scene,`AGV ${String(i+1).padStart(2,'0')}`,x,0.035,z+1.15,2,'#425f61',true);
   }
   const dockModels=[];
   for(let i=0;i<3;i++) {
-    const d=DOCKS[i];block(scene,5.4,0.025,4.2,d.x+2,0.01,d.z,'#819596');
+    const d=DOCKS[i];
+    block(scene,2.2,0.018,1.9,19,0.02,d.z-2.5,'#739b9a');
+    label(scene,`도크 0${i+1} 대기`,19,0.035,d.z-3.8,2.6,'#426a65',true);
+    block(scene,5.4,0.025,4.2,d.x+2,0.01,d.z,'#819596');
     for(const z of [-2.1,2.1])block(scene,5.4,0.035,0.09,d.x+2,0.03,d.z+z,COLORS[i]);
     block(scene,1.8,0.95,1.6,d.x+1.9,0.45,d.z,'#62777c');
     label(scene,`0${i+1}  ${regions[i]}`,d.x+1.8,0.05,d.z+2.9,4,COLORS[i],true);
@@ -149,7 +152,7 @@ export function createScene(container,qrImages,onAssetStatus) {
 
   /** GLB 적용 실패는 상태 표시로 알리고 기본 장비 형상을 유지한다. */
   async function load(url,apply) {
-    try {if(!assetCache.has(url))assetCache.set(url,loader.loadAsync(url));const result=await assetCache.get(url);apply(result.scene.clone(true));loaded++;onAssetStatus(`${loaded}/16 레이어 장비 배치 완료`);}
+    try {if(!assetCache.has(url))assetCache.set(url,loader.loadAsync(url));const result=await assetCache.get(url);apply(result.scene.clone(true));loaded++;onAssetStatus(`${loaded}/16 전체 공정 장비 준비 완료`);}
     catch(error){onAssetStatus(`장비 모델 오류 · 기본 형상 사용`);console.error('장비 로드 실패',error);}
   }
   const assetsReady=Promise.all([
@@ -158,17 +161,32 @@ export function createScene(container,qrImages,onAssetStatus) {
     load(agvUrl,model=>{const remove=[];model.traverse(n=>{if(/Fabric[_ ]bins|Pod[_ ]frame|Stored[_ ]boxes/i.test(n.name))remove.push(n);});remove.forEach(n=>n.removeFromParent());const m=fitModel(model,1.8,0.82,1.45);agv.remove(fallbackAgv);agv.add(m);while(agvModels.length>1)scene.remove(agvModels.pop());}),
     load(truckUrl,model=>{const batched=truckBatch||(truckBatch=batchStatic(model));for(const bay of dockModels){bay.clear();bay.add(fitModel(batched,6.6,3.25,2.5));}})
   ]);
-    return {sync,assetsReady};
+    return {sync,assetsReady,group:scene};
   }
   const layerViews=LAYERS.map((definition,i)=>buildLayer(definition,qrImages[i]));
   const assetsReady=Promise.all(layerViews.map(layer=>layer.assetsReady));
-  /** 같은 프레임에서 네 레이어의 상태를 각각 대응하는 장면에 반영한다. */
-  function sync(factory){factory.layers.forEach((layer,i)=>layerViews[i].sync(layer.simulation));}
+  /** 같은 프레임에서 네 공정의 상태를 각각 대응하는 장면에 반영한다. */
+  function sync(factory){
+    const count=factory.layers.length;
+    if(visibleCount!==count){visibleCount=count;resizeFloor();view(activeView);}
+    layerViews.forEach((layer,i)=>layer.group.visible=i<count);
+    factory.layers.forEach((layer,i)=>layerViews[i].sync(layer.simulation));
+  }
+  /** 활성 공정 범위에 바닥·격자와 접근성 설명을 맞춘다. */
+  function resizeFloor(){
+    const depth=33+29*(visibleCount-1),center=depth/2-16;
+    floor.scale.z=depth/120;floor.position.z=center;
+    grid.scale.z=depth/120;grid.position.z=center;
+    renderer.domElement.setAttribute('aria-label',`${visibleCount}개 공정의 유입구 ${visibleCount*4}개, QR ${visibleCount}개, 출하 도크와 탑차 각 ${visibleCount*3}개를 보여주는 3D 공장`);
+  }
+  resizeFloor();
+  layerViews.forEach((layer,i)=>layer.group.visible=i<visibleCount);
   /** 기준 카메라로 전환하며 OrbitControls 직접 조작을 유지한다. */
   let activeView='overview';
   function view(name) {
     activeView=name;
-    const presets={top:[[6,175,44.01],[6,0,44]],qr:[[14,8,10],[7,1,0]],agv:[[24,15,21],[14,0.7,2]],overview:[[90,145,165],[6,0,44]]};
+    const center=(33+29*(visibleCount-1))/2-16,scale=0.48+0.52*(visibleCount-1)/3;
+    const presets={top:[[6,175*scale,center+0.01],[6,0,center]],qr:[[14,8,10],[7,1,0]],agv:[[24,15,21],[14,0.7,2]],overview:[[6+84*scale,145*scale,center+121*scale],[6,0,center]]};
     const [p,t]=presets[name]||presets.overview;camera.position.fromArray(p);controls.target.fromArray(t);
     if(name==='top'||name==='overview')camera.position.sub(controls.target).multiplyScalar(Math.max(1,(name==='top'?0.5:0.85)/camera.aspect)).add(controls.target);
     controls.update();

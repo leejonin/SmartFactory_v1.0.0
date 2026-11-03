@@ -8,8 +8,8 @@
 - 작업 일시: 2026-11-02, 이 대화의 구현 시작부터 최종 검증까지
 - 지시자: 이종인
 - 작업자: GPT-6 (Codex)
-- 계획: C:\Users\Slu93\Desktop\SmartFactory\Info\plan\2026-11-02\021032_웹3D_공장물류시뮬레이션_plan.md
-- 기술 환경: C:\Users\Slu93\Desktop\SmartFactory\Info\기술_환경.md
+- 계획: ./Info/plan/2026-11-02/021032_웹3D_공장물류시뮬레이션_plan.md
+- 기술 환경: ./Info/기술_환경.md
 
 ## 개요·용어
 
@@ -23,7 +23,7 @@
 
 고정 단계→상자 이동→QR→배차→구간 예약→장면 동기화의 호출 관계와 전체 실제 코드는 다음 문서에 저장했다.
 
-`C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\물류시뮬레이션.md`
+`./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/물류시뮬레이션.md`
 
 ## 검증 결과
 

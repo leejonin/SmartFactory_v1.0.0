@@ -3,3 +3,6 @@
 
 button.control{white-space:nowrap;padding:9px 8px}.control-row select{min-width:72px;padding:5px 2px}
 @media(max-width:640px){.sidebar{display:block}.section{min-width:0}.viewport,.workspace{min-width:0;width:100%}}
+
+/* 선택하지 않은 공정의 목적지 행은 레이아웃에서도 제외한다. */
+.route[hidden]{display:none;}

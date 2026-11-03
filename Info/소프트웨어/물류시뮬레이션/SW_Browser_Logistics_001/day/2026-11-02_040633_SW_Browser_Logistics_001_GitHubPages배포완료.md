@@ -30,4 +30,4 @@ vite.config.js의 base='/SmartFactory_v1.0.0/'가 JS/CSS/GLB 주소에 적용된
 
 로컬 Node.js v24.18.0, npm 11.16.0, Vite 8.3.5. CI는 Node.js 24 계열, Ubuntu 실행 환경이며 의존성 잠금 파일을 사용한다. CI 새 환경 설치 성공으로 로컬 Windows 잠금 문제 전체가 해결됐다고 단정하지 않는다.
 
-기록: C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\day\2026-11-02_040416_SW_Browser_Logistics_001_GitHubPages배포준비.md.
+기록: ./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/day/2026-11-02_040416_SW_Browser_Logistics_001_GitHubPages배포준비.md.

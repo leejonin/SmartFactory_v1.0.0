@@ -1,6 +1,6 @@
 # 물류 흐름과 병렬 AGV 개념
 
-- 버전: v0.0.1
+- 버전: v0.0.7
 - 최초 생성·수정: 2026-11-02 (KST)
 - 기능 ID: SW_Browser_Logistics_001
 - 지시자: 이종인
@@ -32,4 +32,68 @@ forall a,c in A, a != c:
 
 개발자 확인: 레이어는 별도 공장이 아닌 한 공장의 물류 라인이다. L1~L4를 같은 X에서 Z방향으로 1열 배치하며 간격은 29m다. 각 라인의 규칙은 같고 목적지 세 곳과 상태는 독립이다.
 
-worldPosition(i,p) = (0,29*i) + p, i=0..3. 전체 수량은 4 × 기본 라인 수량이다. 구현·검증 내용: C:\Users\Slu93\Desktop\SmartFactory\Info\소프트웨어\물류시뮬레이션\SW_Browser_Logistics_001\day\2026-11-02_032458_SW_Browser_Logistics_001_4라인확장과배치.md
+worldPosition(i,p) = (0,29*i) + p, i=0..3. 전체 수량은 4 × 기본 라인 수량이다. 구현·검증 내용: ./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/day/2026-11-02_032458_SW_Browser_Logistics_001_4라인확장과배치.md
+
+
+## 2026-11-03 사용자 정정 및 현재 개념
+
+기존 레이어 한 개는 공정 한 개로 부른다. 하나의 공장에 공정 1~4개를 선택하며 기본 작업 모드는 1개다. 이전 공장/레이어 호칭보다 이번 정정이 우선한다.
+
+```text
+N in {1,2,3,4}; default(N)=1
+Active = first_N(AllProcesses)
+Run = Render = Aggregate = Active
+AGV_departure_distance >= 2.1 => pickup_owner_release
+Move_allowed => reserved_corridors_do_not_overlap
+```
+
+인계 자리 해제는 이동 허용의 충분조건이 아니다. 기존 충돌 예약 검사를 함께 통과해야 한다. 현재 개선은 병목의 일부만 줄이며 사용자는 추가 피드백을 예정했다.
+
+
+## 2026-11-03 AGV 배차·대기 공간 개념 정정
+
+- 작성·수정: 2026-11-03 10:34:10 KST
+- 지시자: 이종인
+- 작업자: GPT-6 (Codex)
+- 기능 ID: SW_Browser_Logistics_001
+- 관련 기능 ID: 없음
+- 기술 환경: ./Info/기술_환경.md
+
+도크 사용권과 도크 앞 대기 자리 사용권은 별개다. 상자는 QR 성공 후 대기 자리 확보 시 AGV가 먼저 받을 수 있다. 도크가 비면 직행한다. 역할은 차량 번호순으로 고정하지 않고 현재 예상 도착 시간과 선대기 순서에 따른다.
+
+```text
+ReserveWaitSlot(d) => PickupAllowed(d)
+DockFree(d) => DirectDockRoute(d)
+ETA(a) = remaining_travel_seconds + estimated_reservation_delay
+Reserved(a,t) = body_and_remaining_segment(a,t) union reserved_exit_turn(a,t)
+PassedArea(a,t) not in Reserved(a,t)
+```
+
+ETA는 추정이며 4초 정지 비용은 임시 운영값이다. 통과 구간 해제는 차체 여유 폭을 제거한다는 뜻이 아니다.
+
+
+## 이송 중 상한 목표 정정
+
+- 사용자 정정: 10개 이하 → 15개 이하. 컨베이어·상자 생성 코드는 유지.
+- 이송 중은 컨베이어 및 AGV 위 전체 미인도 상자 수이다. 집계 대상을 줄여 목표를 달성한 것처럼 표시하지 않는다.
+- 기존 QR 끝 픽업에서는 첫 픽업 이전16개 반례가 있어 항상15개 이하를 보장할 수 없다. 픽업 범위 확대는 아직 미확정이다.
+- 근거: ./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/day/2026-11-03_104007_SW_Browser_Logistics_001_15개상한가능성확인.md
+
+
+## 사용자 확정: 중간 픽업 불가, AGV 증차
+
+공정당1~12대 중 선택, 기본4대. QR 끝 픽업을 유지한다. 기존1~3대 제한은 이번 정정으로 대체한다. 15개 상한은 증차만으로 보장된 것이 아니다.
+
+
+## 2026-11-03 최신 목표20개 및 AGV 개선
+- 지시자: 이종인 / 작업자: GPT-6 (Codex)
+- 작성·수정: 2026-11-03 14:25:10 KST
+- 기능 ID: SW_Browser_Logistics_001
+목표를 이송 중 전체 상자20개 이하 유지로 정정한다. 기본1공정·4대, 선택1~12대, 컨베이어·생성·QR·끝픽업 형태는 유지한다. 북쪽 도크 경로 분리와 도크/대기면 예약 분리를 구현했다. 기본4대30분5조건에서 최대28~30개로 목표는 미달성이다. 이전10/15개 제약을20개 불가능 증명으로 확대하지 않는다.
+
+
+## v0.0.16 합류 대기 규칙 정정
+- 지시자: 이종인 / 작업자: GPT-6 (Codex)
+- 작성·수정: 2026-11-03 14:28:54 KST
+- 기능 ID: SW_Browser_Logistics_001
+이번 합류 버그 수정은 사용자 요청 범위이다. 티켓 순서는 진입 가능한 요청 사이에 적용한다. 이미 진행 중인 합류는 끝까지 우선하며 한 번에 하나의 합류만 진행한다. 다른 합류점의 정지는 빈 합류점의 진입을 막지 않는다.

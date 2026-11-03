@@ -7,8 +7,8 @@
 - 작업자: GPT-6 (Codex)
 - 기능 ID: SW_Browser_Logistics_001
 - 관련 ID: 없음
-- 기술 환경: C:\Users\Slu93\Desktop\SmartFactory\Info\기술_환경.md
-- 계획: C:\Users\Slu93\Desktop\SmartFactory\Info\plan\2026-11-02\021032_웹3D_공장물류시뮬레이션_plan.md
+- 기술 환경: ./Info/기술_환경.md
+- 계획: ./Info/plan/2026-11-02/021032_웹3D_공장물류시뮬레이션_plan.md
 
 ## 개요·용어
 
@@ -22,7 +22,7 @@
 
 `stepAgv` → `dispatch` → `approachRoute` / `routeLength` → `requestTravel` → 구간 충돌 검사 → `advance` 순으로 호출한다. standbyOwner는 QR 옆 대기 위치 예약, pickupOwner는 실제 인계 위치 예약이다. `staging`은 선대기 이동, `standby`는 선대기 완료 상태다.
 
-변경 파일은 `C:\Users\Slu93\Desktop\SmartFactory\src\simulation.js`, `C:\Users\Slu93\Desktop\SmartFactory\src\scene.js`, `C:\Users\Slu93\Desktop\SmartFactory\src\main.js`와 테스트·버전 파일이다. 실제 전체 코드와 함수별 상세 내용은 같은 기능 폴더의 물류시뮬레이션.md에 최신화했다.
+변경 파일은 `./src/simulation.js`, `./src/scene.js`, `./src/main.js`와 테스트·버전 파일이다. 실제 전체 코드와 함수별 상세 내용은 같은 기능 폴더의 물류시뮬레이션.md에 최신화했다.
 
 ## 측정 조건과 결과
 
