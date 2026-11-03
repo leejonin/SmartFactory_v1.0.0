@@ -54,8 +54,8 @@ flowchart LR
 Git과 위 요구 조건에 맞는 Node.js를 설치한 뒤, 원하는 작업 폴더의 터미널에서 실행합니다.
 
 ```powershell
-git clone https://github.com/leejonin/SmartFactory_v1.0.0.git
-cd SmartFactory_v1.0.0
+git clone https://github.com/leejonin/SmartFactory_v1.1.0.git
+cd SmartFactory_v1.1.0
 npm ci
 npm run dev
 ```
@@ -75,11 +75,11 @@ npm run preview
 
 ## GitHub Pages 배포
 
-배포 주소: [SmartFactory 실행](https://leejonin.github.io/SmartFactory_v1.0.0/)
+배포 주소: [SmartFactory 실행](https://leejonin.github.io/SmartFactory_v1.1.0/)
 
 `.github/workflows/pages.yml`이 main 브랜치 push 또는 수동 실행을 받아 Node.js 24에서 `npm ci` → `npm test` → `npm run build`를 실행하고 `dist/`를 GitHub Pages에 배포합니다. 저장소 Settings → Pages의 Source는 GitHub Actions로 설정합니다. 배포 성공 여부는 저장소 Actions의 `GitHub Pages 배포` 실행 결과에서 확인합니다.
 
-`vite.config.js`의 base는 `/SmartFactory_v1.0.0/`입니다. JavaScript·CSS와 GLB 주소 모두 이 하위 경로를 사용합니다. 로컬 dev·preview에서도 터미널에 표시되는 이 경로의 주소를 엽니다. 저장소 이름이나 배포 경로를 바꾸면 base와 위 링크를 함께 바꿔야 합니다.
+`vite.config.js`의 base는 `/SmartFactory_v1.1.0/`입니다. JavaScript·CSS와 GLB 주소 모두 이 하위 경로를 사용합니다. 로컬 dev·preview에서도 터미널에 표시되는 이 경로의 주소를 엽니다. 저장소 이름이나 배포 경로를 바꾸면 base와 위 링크를 함께 바꿔야 합니다.
 
 ## 화면 조작
 

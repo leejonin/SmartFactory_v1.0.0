@@ -1,4 +1,4 @@
-// GitHub Pages의 저장소 하위 경로에서 JS·CSS·GLB 주소를 함께 맞춘다.
+// 저장소 이름이 바뀌어도 현재 배포 폴더 기준으로 JS·CSS·GLB를 불러온다.
 export default {
-  base: '/SmartFactory_v1.0.0/',
+  base: './',
 };
