@@ -14,3 +14,13 @@
 - 코드: `./src/main.js`, `simulation.js`, `qr.js`, `scene.js` (모두 동일 src 폴더).
 - 문서: `./Info/소프트웨어/물류시뮬레이션/SW_Browser_Logistics_001/물류시뮬레이션.md`
 - 이전 ID: 해당 없음.
+
+## 2026-11-03 19:35:20 KST 추가 — 지시자: 이종인 / 작업자: Claude Opus 5.5 (Claude)
+
+| 기능 ID | 영역 / 실행환경 / 영문중분류 | 중분류명 대응 | 기능·책임 | 관련 ID | 상태 |
+|---|---|---|---|---|---|
+| SW_Browser_ConveyorKit_001 | SW / Browser / ConveyorKit | 컨베이어키트 / ConveyorKit | 공정 컨베이어 상세 화면: 공두이노 DIY 컨베이어 색상 분류 키트 1:1 재현과 분류 동작 | SW_Browser_Logistics_001 | 구현 완료, 빌드·실물 치수 미확인 |
+
+- 코드: ./conveyor.html, ./src/conveyor/sorter.js, kit.js, main.js, style.css. 테스트 ./tests/sorter.test.js. 에셋 ./Asset/kit-parts/.
+- 문서: ./Info/소프트웨어/컨베이어키트/SW_Browser_ConveyorKit_001/컨베이어키트.md
+- 이전 ID: 해당 없음.

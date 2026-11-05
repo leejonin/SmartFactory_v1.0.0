@@ -1,0 +1,21 @@
+Kit part models (Asset/kit-parts)
+
+Source: FreeCAD Parts Library — https://github.com/FreeCAD/FreeCAD-library
+License: Creative Commons Attribution 3.0 Unported (CC-BY-3.0)
+         https://creativecommons.org/licenses/by/3.0/
+Each part is copyrighted by its own author; authorship is recorded in the git
+history of the FreeCAD-library repository.
+
+Converted files (STEP → GLB with occt-import-js 0.0.x, then merged by colour,
+Z-up mm → Y-up m). Changes: colours were assigned or replaced as noted.
+- uno.glb          ← Computing/SingleBoardComputers/Arduino/freaduino-uno.step
+                     (white PCB faces recoloured to Arduino blue, yellow pins to gold)
+- sg90.glb         ← Electrical Parts/Servos/SG-90/Servo-sg90.step (coloured blue)
+- sg90_horn.glb    ← Electrical Parts/Servos/SG-90/SG90-1-arm-horn.step (coloured white)
+- prox_sensor.glb  ← Electronics Parts/Inductors/Inductive_sensor/Inductive-Proximity-Sensor.step
+                     (body recoloured yellow to resemble the kit's IR proximity sensor)
+- bearing_608.glb  ← Mechanical Parts/Bearings/608ZZ_Ball_Bearing.step
+- profile_2020.glb ← Mechanical Parts/Profiles EN/Generic/Profile-20x20-B-Type_Slot6_A.step
+
+Converter: occt-import-js (https://github.com/kovacsv/occt-import-js, LGPL-2.1),
+used only at conversion time; it is not shipped with this project.
